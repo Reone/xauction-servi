@@ -1,39 +1,28 @@
-# xauction-servi
 
-#### 介绍
-{**以下是 Gitee 平台说明，您可以替换此简介**
-Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用 Gitee 实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
-
-#### 软件架构
-软件架构说明
-
-
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+### GIT 提交规范
+- feat (Feature): 新增功能
+- fix (Fix): 修复错误
+- style (Style): 表示代码样式修改的提交，不影响程序逻辑。
+- revert: 回滚之前的提交
+- build: 构建系统或外部依赖项的变更
+- refactor (Refactor): 代码重构，即不改变代码功能的情况下优化代码结构。
+- docs (Documentation): 文档更新
+- test (Test): 测试相关的更改
+- chore (Chore): 维护任务，如更新依赖项、配置文件等。
+- perf (Performance): 性能优化
+- ci (Continuous Integration): 持续集成相关的更改
+---
+### 实体类后缀
+- Po:  持久层,直接对应数据库表
+- Dto: 传输层,跨系统/接口数据传输 (Controller接收)
+- Vo:  展示层,前端数据展示 (Controller返回)
+- Bo:  业务层,封装复杂业务逻辑 (Service接收返回)
+- Bean:通用,通用数据容器
+---
+### 类名后缀
+- Api : 接口
+- Service : 业务逻辑层
+- Dao : 数据访问层
+- Repository : 数据访问对象
+- Helper : 业务辅助类
+- Ex : 某一对象相关的工具类
