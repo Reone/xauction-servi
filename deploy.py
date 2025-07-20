@@ -27,9 +27,9 @@ print("Files copied successfully.")
 # 准备上传的目录名
 dir_name = "docker_dir"
 # 目标远程目录
-remote_dir = "/home/kServi/"
+remote_dir = "/home/xauction/"
 # docker名字
-image_name = "kservi"
+image_name = "xauction"
 
 # 本地文件夹路径
 local_folder_path = "./{}/".format(dir_name)
