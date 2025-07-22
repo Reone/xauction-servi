@@ -4,6 +4,8 @@ import com.reone.xauction.bean.dto.AuctionDto
 import com.reone.xauction.bean.vo.AuctionVo
 import com.reone.xauction.repository.AuctionRepository
 import com.reone.xauction.service.AuctionService
+import com.reone.xauction.util.currentTime
+import com.reone.xauction.util.currentUserId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
@@ -73,6 +75,10 @@ class AuctionServiceImpl : AuctionService {
 
     override fun add(auction: AuctionDto): Boolean {
         return try {
+            auction.createTime = currentTime()
+            auction.createBy = currentUserId.toString()
+            auction.updateTime = currentTime()
+            auction.updateBy = currentUserId.toString()
             auctionRepository.save(auction)
             true
         } catch (e: Exception) {
@@ -82,6 +88,8 @@ class AuctionServiceImpl : AuctionService {
 
     override fun update(auction: AuctionDto): Boolean {
         return try {
+            auction.updateTime = currentTime()
+            auction.updateBy = currentUserId.toString()
             auctionRepository.save(auction)
             true
         } catch (e: Exception) {

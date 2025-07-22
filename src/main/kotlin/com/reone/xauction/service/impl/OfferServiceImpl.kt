@@ -5,6 +5,8 @@ import com.reone.xauction.bean.vo.OfferVo
 import com.reone.xauction.repository.OfferRepository
 import com.reone.xauction.service.OfferService
 import com.reone.xauction.service.UserService
+import com.reone.xauction.util.currentTime
+import com.reone.xauction.util.currentUserId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
@@ -67,6 +69,10 @@ class OfferServiceImpl : OfferService {
 
     override fun add(offer: OfferDto): Boolean {
         return try {
+            offer.createTime = currentTime()
+            offer.createBy = currentUserId.toString()
+            offer.updateTime = currentTime()
+            offer.updateBy = currentUserId.toString()
             offerRepository.save(offer)
             true
         } catch (e: Exception) {
@@ -76,6 +82,8 @@ class OfferServiceImpl : OfferService {
 
     override fun update(offer: OfferDto): Boolean {
         return try {
+            offer.updateTime = currentTime()
+            offer.updateBy = currentUserId.toString()
             offerRepository.save(offer)
             true
         } catch (e: Exception) {

@@ -6,6 +6,7 @@ import com.reone.xauction.bean.vo.UserVo
 import com.reone.xauction.service.UserService
 import com.reone.xauction.util.ErrorCode
 import com.reone.xauction.util.Resp
+import com.reone.xauction.util.currentUserId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -37,6 +38,9 @@ class UserController : BaseController() {
 
     @PostMapping("/update")
     fun update(@RequestBody userDto: UserDto): RespVo<UserVo> {
+        if (userDto.id == null) {
+            userDto.id = currentUserId
+        }
         return if (userDto.id == null) {
             Resp.fail("缺少用户id", ErrorCode.ERR_CODE_PARAM)
         } else {
