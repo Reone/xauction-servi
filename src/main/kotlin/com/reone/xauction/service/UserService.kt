@@ -16,4 +16,6 @@ interface UserService {
     fun loginByCode(code: String): UserVo
 
     fun register(userDto: UserDto): UserVo
+
+    fun findById(id: Long): UserVo?
 }

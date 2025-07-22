@@ -5,7 +5,6 @@ import com.reone.xauction.bean.vo.RespVo
 import com.reone.xauction.bean.vo.UserVo
 import com.reone.xauction.service.UserService
 import com.reone.xauction.util.ErrorCode
-import com.reone.xauction.util.HEADER_USER_ID
 import com.reone.xauction.util.Resp
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -37,12 +36,11 @@ class UserController : BaseController() {
     }
 
     @PostMapping("/update")
-    fun update(@RequestHeader(HEADER_USER_ID) id: Long?, @RequestBody userDto: UserDto): RespVo<UserVo> {
-        if (id == null) {
-            return Resp.fail("缺少用户id", ErrorCode.ERR_CODE_PARAM)
+    fun update(@RequestBody userDto: UserDto): RespVo<UserVo> {
+        return if (userDto.id == null) {
+            Resp.fail("缺少用户id", ErrorCode.ERR_CODE_PARAM)
         } else {
-            userDto.id = id
-            return Resp.success(userService.update(userDto))
+            Resp.success(userService.update(userDto))
         }
     }
 }

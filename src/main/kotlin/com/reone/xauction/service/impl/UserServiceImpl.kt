@@ -81,4 +81,9 @@ class UserServiceImpl : UserService {
             throw Throwable("用户不存在")
         }
     }
+
+    override fun findById(id: Long): UserVo? {
+        val user = userRepository.findByIdOrNull(id)
+        return user?.let { UserVo(user) }
+    }
 }

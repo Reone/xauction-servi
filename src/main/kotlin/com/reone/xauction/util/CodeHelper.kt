@@ -7,8 +7,8 @@ package com.reone.xauction.util
  */
 object CodeHelper {
     fun generateCode(): String {
-        //生成8位随机数组编码
-        return (0..7).map {
+        //生成6位随机数组编码
+        return (0..5).map {
             (Math.random() * 10).toInt()
         }.joinToString("")
     }
