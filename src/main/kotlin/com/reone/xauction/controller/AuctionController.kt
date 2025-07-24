@@ -16,7 +16,7 @@ class AuctionController : BaseController() {
     lateinit var auctionService: AuctionService
 
     @GetMapping("/list")
-    fun list(@RequestBody auctionDto: AuctionDto): RespVo<List<AuctionVo>> {
+    fun list(auctionDto: AuctionDto): RespVo<List<AuctionVo>> {
         return Resp.success(auctionService.list(auctionDto))
     }
 
@@ -26,12 +26,12 @@ class AuctionController : BaseController() {
     }
 
     @PostMapping("/add")
-    fun add(@RequestBody auction: AuctionDto): RespVo<Boolean> {
+    fun add(auction: AuctionDto): RespVo<Boolean> {
         return Resp.success(auctionService.add(auction))
     }
 
     @PostMapping("/update")
-    fun update(@RequestBody auction: AuctionDto): RespVo<Boolean> {
+    fun update(auction: AuctionDto): RespVo<Boolean> {
         return Resp.success(auctionService.update(auction))
     }
 

@@ -24,29 +24,29 @@ class OfferServiceImpl : OfferService {
 
     @Autowired
     lateinit var userService: UserService
-    override fun list(auctionDto: OfferDto): List<OfferVo> {
-        //根据auctionDto中不为空的字段查询数据
+    override fun list(offerDto: OfferDto): List<OfferVo> {
+        //根据offerDto中不为空的字段查询数据
         return offerRepository.findAll { root, query, criteriaBuilder ->
             var predicate: Predicate? = null
-            if (auctionDto.id != null) {
-                predicate = criteriaBuilder.equal(root.get<Any>("id"), auctionDto.id)
+            if (offerDto.id != null) {
+                predicate = criteriaBuilder.equal(root.get<Any>("id"), offerDto.id)
             }
-            if (auctionDto.auctionId != null) {
+            if (offerDto.auctionId != null) {
                 predicate = criteriaBuilder.and(
                     predicate,
-                    criteriaBuilder.equal(root.get<Any>("auctionId"), auctionDto.auctionId)
+                    criteriaBuilder.equal(root.get<Any>("auctionId"), offerDto.auctionId)
                 )
             }
-            if (auctionDto.userId != null) {
+            if (offerDto.userId != null) {
                 predicate =
-                    criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("userId"), auctionDto.userId))
+                    criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("userId"), offerDto.userId))
             }
-            if (auctionDto.price != null) {
+            if (offerDto.price != null) {
                 predicate =
-                    criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("price"), auctionDto.price))
+                    criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("price"), offerDto.price))
             }
-            if (auctionDto.win != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("win"), auctionDto.win))
+            if (offerDto.win != null) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("win"), offerDto.win))
             }
             predicate
         }.map { pojo ->

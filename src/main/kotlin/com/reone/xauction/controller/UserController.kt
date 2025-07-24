@@ -17,8 +17,8 @@ class UserController : BaseController() {
     @Autowired
     lateinit var userService: UserService
 
-    @GetMapping("/genderCode")
-    fun genderCode(): RespVo<String> {
+    @GetMapping("/generateCode")
+    fun generateCode(): RespVo<String> {
         return Resp.success(userService.genderCode())
     }
 
@@ -32,12 +32,12 @@ class UserController : BaseController() {
     }
 
     @PostMapping("/register")
-    fun register(@RequestBody userDto: UserDto): RespVo<UserVo> {
+    fun register(userDto: UserDto): RespVo<UserVo> {
         return Resp.success(userService.register(userDto))
     }
 
     @PostMapping("/update")
-    fun update(@RequestBody userDto: UserDto): RespVo<UserVo> {
+    fun update(userDto: UserDto): RespVo<UserVo> {
         if (userDto.id == null) {
             userDto.id = currentUserId
         }

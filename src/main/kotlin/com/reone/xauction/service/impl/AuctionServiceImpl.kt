@@ -35,9 +35,9 @@ class AuctionServiceImpl : AuctionService {
                 predicate =
                     criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("imgUrl"), auctionDto.imgUrl))
             }
-            if (auctionDto.desc != null) {
+            if (auctionDto.subTitle != null) {
                 predicate =
-                    criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("desc"), auctionDto.desc))
+                    criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("desc"), auctionDto.subTitle))
             }
             if (auctionDto.minPrice != null) {
                 predicate = criteriaBuilder.and(

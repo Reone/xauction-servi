@@ -16,17 +16,17 @@ class OfferController : BaseController() {
     lateinit var offerService: OfferService
 
     @GetMapping("/list")
-    fun list(@RequestBody offerDto: OfferDto): RespVo<List<OfferVo>> {
+    fun list(offerDto: OfferDto): RespVo<List<OfferVo>> {
         return Resp.success(offerService.list(offerDto))
     }
 
     @PostMapping("/add")
-    fun add(@RequestBody offer: OfferDto): RespVo<Boolean> {
+    fun add(offer: OfferDto): RespVo<Boolean> {
         return Resp.success(offerService.add(offer))
     }
 
     @PostMapping("/update")
-    fun update(@RequestBody offer: OfferDto): RespVo<Boolean> {
+    fun update(offer: OfferDto): RespVo<Boolean> {
         return Resp.success(offerService.update(offer))
     }
 

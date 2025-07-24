@@ -21,7 +21,7 @@ open class AuctionPo(
     open var imgUrl: String? = null,
 
     @Column(nullable = true)
-    open var desc: String? = null,
+    open var subTitle: String? = null,
 
     @Column(nullable = true)
     open var minPrice: Double? = null,

@@ -1,6 +1,5 @@
 package com.reone.xauction.controller
 
-
 import com.reone.xauction.bean.vo.RespVo
 import com.reone.xauction.util.Resp
 import org.springframework.web.bind.annotation.GetMapping
