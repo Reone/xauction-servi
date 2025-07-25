@@ -43,7 +43,7 @@ class UserServiceImpl : UserService {
         user.copyNotNull(userDto)
         user.updateTime = currentTime()
         user.updateBy = currentUserId.toString()
-        val userPo = userRepository.save(userDto)
+        val userPo = userRepository.save(user)
         return UserVo(userPo)
     }
 
@@ -58,6 +58,7 @@ class UserServiceImpl : UserService {
         user = UserPo()
         user.code = userDto.code
         user.copyNotNull(userDto)
+        user.role = 0
         if (user.nick.isNullOrEmpty()) {
             user.nick = "匿名用户${unixTime()}"
         }
@@ -85,5 +86,10 @@ class UserServiceImpl : UserService {
     override fun findById(id: Long): UserVo? {
         val user = userRepository.findByIdOrNull(id)
         return user?.let { UserVo(user) }
+    }
+
+    override fun list(): List<UserVo> {
+        val userList = userRepository.findAll()
+        return userList.map { UserVo(it) }
     }
 }

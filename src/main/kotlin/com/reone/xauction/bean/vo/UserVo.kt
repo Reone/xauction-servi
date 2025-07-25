@@ -15,8 +15,9 @@ data class UserVo(
     val nick: String?,
     val phone: String?,
     val avatar: String?,
+    val role: Int?,
 ) {
-    constructor(pojo: UserPo) : this(pojo.id, pojo.code, pojo.name, pojo.nick, pojo.phone, pojo.avatar)
+    constructor(pojo: UserPo) : this(pojo.id, pojo.code, pojo.name, pojo.nick, pojo.phone, pojo.avatar, pojo.role)
 
     val no: String
         get() = '#' + number2str(id ?: 0L, 4)

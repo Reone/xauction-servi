@@ -18,4 +18,5 @@ interface UserService {
     fun register(userDto: UserDto): UserVo
 
     fun findById(id: Long): UserVo?
+    fun list(): List<UserVo>
 }

@@ -1,6 +1,7 @@
 package com.reone.xauction.bean.po
 
 import javax.persistence.Column
+import javax.persistence.Entity
 
 /**
  *
