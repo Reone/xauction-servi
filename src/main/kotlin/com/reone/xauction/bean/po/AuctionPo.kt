@@ -1,5 +1,6 @@
 package com.reone.xauction.bean.po
 
+import java.time.LocalDate
 import javax.persistence.*
 
 /**
@@ -20,7 +21,7 @@ open class AuctionPo(
     @Column(nullable = true)
     open var imgUrl: String? = null,
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 2048)
     open var subTitle: String? = null,
 
     @Column(nullable = true)
@@ -30,10 +31,10 @@ open class AuctionPo(
     open var maxPrice: Double? = null,
 
     @Column(nullable = true)
-    open var startTime: Long? = null,
+    open var startTime: LocalDate? = null,
 
     @Column(nullable = true)
-    open var endTime: Long? = null,
+    open var endTime: LocalDate? = null,
 
     /**
      * 状态 0:草稿 1:未开始 2:进行中 3:中止 4.拍卖完成 5.流标

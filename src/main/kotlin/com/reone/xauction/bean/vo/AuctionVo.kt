@@ -1,6 +1,7 @@
 package com.reone.xauction.bean.vo
 
 import com.reone.xauction.bean.po.AuctionPo
+import java.time.LocalDate
 
 /**
  *
@@ -14,8 +15,8 @@ data class AuctionVo(
     val subTitle: String? = null,
     val minPrice: Double? = null,
     val maxPrice: Double? = null,
-    val startTime: Long? = null,
-    val endTime: Long? = null,
+    val startTime: LocalDate? = null,
+    val endTime: LocalDate? = null,
     val status: Int? = 0,
     val offerId: Long? = null,
 ) {

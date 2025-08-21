@@ -13,9 +13,9 @@ interface AuctionService {
 
     fun info(id: Long): AuctionVo
 
-    fun add(auction: AuctionDto): Boolean
+    fun add(auction: AuctionDto): AuctionVo?
 
-    fun update(auction: AuctionDto): Boolean
+    fun update(auction: AuctionDto): AuctionVo?
 
     fun delete(id: Long): Boolean
 }

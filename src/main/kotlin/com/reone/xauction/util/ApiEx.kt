@@ -37,7 +37,7 @@ val currentUserId: Long?
 
 object Resp {
 
-    fun <T> success(data: T, msg: String? = null): RespVo<T> {
+    fun <T> success(data: T?, msg: String? = null): RespVo<T> {
         return RespVo(ErrorCode.ERR_CODE_SUCCESS, msg, data)
     }
 

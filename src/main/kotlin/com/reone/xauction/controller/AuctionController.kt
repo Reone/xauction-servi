@@ -26,12 +26,15 @@ class AuctionController : BaseController() {
     }
 
     @PostMapping("/add")
-    fun add(auction: AuctionDto): RespVo<Boolean> {
+    fun add(@RequestBody auction: AuctionDto): RespVo<AuctionVo> {
         return Resp.success(auctionService.add(auction))
     }
 
     @PostMapping("/update")
-    fun update(auction: AuctionDto): RespVo<Boolean> {
+    fun update(@RequestBody auction: AuctionDto): RespVo<AuctionVo> {
+        if (auction.id == null) {
+            return Resp.fail("id不能为空")
+        }
         return Resp.success(auctionService.update(auction))
     }
 

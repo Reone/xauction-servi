@@ -76,6 +76,7 @@ class OfferServiceImpl : OfferService {
             offerRepository.save(offer)
             true
         } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }
@@ -87,6 +88,7 @@ class OfferServiceImpl : OfferService {
             offerRepository.save(offer)
             true
         } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }
@@ -96,6 +98,7 @@ class OfferServiceImpl : OfferService {
             offerRepository.deleteById(id)
             true
         } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }
