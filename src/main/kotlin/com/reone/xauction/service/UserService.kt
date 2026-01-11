@@ -19,4 +19,5 @@ interface UserService {
 
     fun findById(id: Long): UserVo?
     fun list(): List<UserVo>
+    fun delete(id: Long): Boolean
 }

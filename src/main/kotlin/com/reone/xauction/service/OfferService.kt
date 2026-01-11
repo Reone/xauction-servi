@@ -13,9 +13,9 @@ interface OfferService {
 
     fun info(id: Long): OfferVo
 
-    fun add(offer: OfferDto): Boolean
+    fun add(offer: OfferDto): OfferVo
 
-    fun update(offer: OfferDto): Boolean
+    fun update(offer: OfferDto): OfferVo
 
     fun delete(id: Long): Boolean
 }

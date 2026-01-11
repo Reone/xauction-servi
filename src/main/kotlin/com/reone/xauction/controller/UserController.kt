@@ -27,6 +27,13 @@ class UserController : BaseController() {
         return Resp.success(userService.list())
     }
 
+    @GetMapping("/info")
+    fun info(id: Long): RespVo<UserVo> {
+        val user = userService.findById(id)
+            ?: return Resp.fail("用户不存在", ErrorCode.ERR_CODE_PARAM)
+        return Resp.success(user)
+    }
+
     @PostMapping("/loginByCode")
     fun login(@RequestBody userDto: UserDto): RespVo<UserVo> {
         return if (userDto.code == null) {
@@ -51,5 +58,13 @@ class UserController : BaseController() {
         } else {
             Resp.success(userService.update(userDto))
         }
+    }
+
+    @PostMapping("/delete")
+    fun delete(id: Long?): RespVo<Boolean> {
+        if (id == null) {
+            return Resp.fail("缺少用户id", ErrorCode.ERR_CODE_PARAM)
+        }
+        return Resp.success(userService.delete(id))
     }
 }

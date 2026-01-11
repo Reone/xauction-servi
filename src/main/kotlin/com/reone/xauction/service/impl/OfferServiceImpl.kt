@@ -1,13 +1,15 @@
 package com.reone.xauction.service.impl
 
 import com.reone.xauction.bean.dto.OfferDto
+import com.reone.xauction.bean.po.OfferPo
 import com.reone.xauction.bean.vo.OfferVo
 import com.reone.xauction.repository.OfferRepository
 import com.reone.xauction.service.OfferService
 import com.reone.xauction.service.UserService
 import com.reone.xauction.util.currentTime
-import com.reone.xauction.util.currentUserId
+import com.reone.xauction.util.operatorId
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
@@ -26,80 +28,82 @@ class OfferServiceImpl : OfferService {
     lateinit var userService: UserService
     override fun list(offerDto: OfferDto): List<OfferVo> {
         //根据offerDto中不为空的字段查询数据
-        return offerRepository.findAll { root, query, criteriaBuilder ->
-            var predicate: Predicate? = null
-            if (offerDto.id != null) {
-                predicate = criteriaBuilder.equal(root.get<Any>("id"), offerDto.id)
+        return offerRepository.findAll { root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            offerDto.id?.let {
+                predicates.add(criteriaBuilder.equal(root.get<Any>("id"), it))
             }
-            if (offerDto.auctionId != null) {
-                predicate = criteriaBuilder.and(
-                    predicate,
-                    criteriaBuilder.equal(root.get<Any>("auctionId"), offerDto.auctionId)
-                )
+            offerDto.auctionId?.let {
+                predicates.add(criteriaBuilder.equal(root.get<Any>("auctionId"), it))
             }
-            if (offerDto.userId != null) {
-                predicate =
-                    criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("userId"), offerDto.userId))
+            offerDto.userId?.let {
+                predicates.add(criteriaBuilder.equal(root.get<Any>("userId"), it))
             }
-            if (offerDto.price != null) {
-                predicate =
-                    criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("price"), offerDto.price))
+            offerDto.price?.let {
+                predicates.add(criteriaBuilder.equal(root.get<Any>("price"), it))
             }
-            if (offerDto.win != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get<Any>("win"), offerDto.win))
+            offerDto.win?.let {
+                predicates.add(criteriaBuilder.equal(root.get<Any>("win"), it))
             }
-            predicate
-        }.map { pojo ->
-            val offer = OfferVo(pojo)
-            pojo.userId?.let {
-                offer.user = userService.findById(it)
+            if (predicates.isNotEmpty()) {
+                criteriaBuilder.and(*predicates.toTypedArray())
+            } else {
+                criteriaBuilder.conjunction()
             }
-            return@map offer
-        }
+        }.map { it.toVoWithUser() }
     }
 
     override fun info(id: Long): OfferVo {
-        val pojo = offerRepository.findById(id).get()
-        val offer = OfferVo(pojo)
-        pojo.userId?.let {
-            offer.user = userService.findById(it)
-        }
-        return offer
+        val pojo = offerRepository.findByIdOrNull(id) ?: throw Throwable("出价不存在")
+        return pojo.toVoWithUser()
     }
 
-    override fun add(offer: OfferDto): Boolean {
-        return try {
-            offer.createTime = currentTime()
-            offer.createBy = currentUserId.toString()
-            offer.updateTime = currentTime()
-            offer.updateBy = currentUserId.toString()
-            offerRepository.save(offer)
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
+    override fun add(offer: OfferDto): OfferVo {
+        val now = currentTime()
+        val operator = operatorId
+        val po = OfferPo().apply {
+            this.auctionId = offer.auctionId ?: throw Throwable("缺少拍卖id")
+            this.userId = offer.userId ?: throw Throwable("缺少用户id")
+            this.price = offer.price
+            this.win = offer.win ?: 0
+            this.createTime = now
+            this.createBy = operator
+            this.updateTime = now
+            this.updateBy = operator
         }
+        val saved = offerRepository.save(po)
+        return saved.toVoWithUser()
     }
 
-    override fun update(offer: OfferDto): Boolean {
-        return try {
-            offer.updateTime = currentTime()
-            offer.updateBy = currentUserId.toString()
-            offerRepository.save(offer)
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
+    override fun update(offer: OfferDto): OfferVo {
+        val offerId = offer.id ?: throw Throwable("缺少id参数")
+        val po = offerRepository.findByIdOrNull(offerId) ?: throw Throwable("出价不存在")
+        val now = currentTime()
+        po.apply {
+            offer.auctionId?.let { this.auctionId = it }
+            offer.userId?.let { this.userId = it }
+            offer.price?.let { this.price = it }
+            offer.win?.let { this.win = it }
+            this.updateTime = now
+            this.updateBy = operatorId
         }
+        val saved = offerRepository.save(po)
+        return saved.toVoWithUser()
     }
 
     override fun delete(id: Long): Boolean {
-        return try {
-            offerRepository.deleteById(id)
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
+        if (!offerRepository.existsById(id)) {
+            throw Throwable("出价不存在")
         }
+        offerRepository.deleteById(id)
+        return true
+    }
+
+    private fun OfferPo.toVoWithUser(): OfferVo {
+        val vo = OfferVo(this)
+        this.userId?.let {
+            vo.user = userService.findById(it)
+        }
+        return vo
     }
 }

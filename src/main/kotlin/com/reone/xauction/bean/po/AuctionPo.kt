@@ -21,6 +21,11 @@ open class AuctionPo(
     @Column(nullable = true)
     open var imgUrl: String? = null,
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "xa_auction_image", joinColumns = [JoinColumn(name = "auction_id")])
+    @Column(name = "img_url", length = 512)
+    open var imgUrls: MutableList<String> = mutableListOf(),
+
     @Column(nullable = true, length = 2048)
     open var subTitle: String? = null,
 

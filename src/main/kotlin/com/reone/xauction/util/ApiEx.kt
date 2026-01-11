@@ -34,6 +34,9 @@ val response: HttpServletResponse?
 val currentUserId: Long?
     get() = request?.getHeader(HEADER_USER_ID)?.toLongOrNull()
 
+val operatorId: String
+    get() = currentUserId?.toString() ?: "system"
+
 
 object Resp {
 

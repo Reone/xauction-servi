@@ -6,8 +6,9 @@ import com.reone.xauction.bean.vo.AuctionVo
 import com.reone.xauction.repository.AuctionRepository
 import com.reone.xauction.service.AuctionService
 import com.reone.xauction.util.currentTime
-import com.reone.xauction.util.currentUserId
+import com.reone.xauction.util.operatorId
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
@@ -23,7 +24,7 @@ class AuctionServiceImpl : AuctionService {
     lateinit var auctionRepository: AuctionRepository
     override fun list(auctionDto: AuctionDto): List<AuctionVo> {
         //根据auctionDto中不为空的字段查询数据
-        return auctionRepository.findAll { root, query, criteriaBuilder ->
+        return auctionRepository.findAll { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
 
             auctionDto.id?.let {
@@ -39,7 +40,7 @@ class AuctionServiceImpl : AuctionService {
             }
 
             auctionDto.subTitle?.let {
-                predicates.add(criteriaBuilder.equal(root.get<Any>("desc"), it))
+                predicates.add(criteriaBuilder.equal(root.get<Any>("subTitle"), it))
             }
 
             auctionDto.minPrice?.let {
@@ -62,6 +63,10 @@ class AuctionServiceImpl : AuctionService {
                 predicates.add(criteriaBuilder.equal(root.get<Any>("status"), it))
             }
 
+            auctionDto.offerId?.let {
+                predicates.add(criteriaBuilder.equal(root.get<Any>("offerId"), it))
+            }
+
             if (predicates.isNotEmpty()) {
                 criteriaBuilder.and(*predicates.toTypedArray())
             } else {
@@ -71,66 +76,64 @@ class AuctionServiceImpl : AuctionService {
     }
 
     override fun info(id: Long): AuctionVo {
-        return AuctionVo(auctionRepository.findById(id).get())
+        val auction = auctionRepository.findByIdOrNull(id) ?: throw Throwable("拍卖不存在")
+        return AuctionVo(auction)
     }
 
     override fun add(auction: AuctionDto): AuctionVo {
-        auction.createTime = currentTime()
-        auction.createBy = currentUserId.toString()
-        auction.updateTime = currentTime()
-        auction.updateBy = currentUserId.toString()
-        val actionPo = AuctionPo()
-        actionPo.apply {
+        val now = currentTime()
+        val operator = operatorId
+        val actionPo = AuctionPo().apply {
             this.title = auction.title
             this.imgUrl = auction.imgUrl
+            this.imgUrls = auction.imgUrls?.toMutableList() ?: mutableListOf()
+            if (this.imgUrl.isNullOrBlank()) {
+                this.imgUrl = this.imgUrls.firstOrNull()
+            }
             this.subTitle = auction.subTitle
             this.minPrice = auction.minPrice
             this.maxPrice = auction.maxPrice
             this.startTime = auction.startTime
             this.endTime = auction.endTime
+            this.status = auction.status ?: 0
+            this.offerId = auction.offerId
+            this.createTime = now
+            this.createBy = operator
+            this.updateTime = now
+            this.updateBy = operator
         }
         return AuctionVo(auctionRepository.save(actionPo))
     }
 
     override fun update(auction: AuctionDto): AuctionVo? {
-        auction.updateTime = currentTime()
-        auction.updateBy = currentUserId.toString()
-        val auctionPo = auctionRepository.findById(auction.id!!).get()
+        val auctionId = auction.id ?: throw Throwable("缺少id参数")
+        val auctionPo = auctionRepository.findByIdOrNull(auctionId) ?: throw Throwable("拍卖不存在")
+        val now = currentTime()
+        val operator = operatorId
         auctionPo.apply {
-            if (auction.title != null) {
-                this.title = auction.title
+            auction.title?.let { this.title = it }
+            auction.imgUrl?.let { this.imgUrl = it }
+            auction.imgUrls?.let { this.imgUrls = it.toMutableList() }
+            if (this.imgUrl.isNullOrBlank()) {
+                this.imgUrl = this.imgUrls.firstOrNull()
             }
-            if (auction.imgUrl != null) {
-                this.imgUrl = auction.imgUrl
-            }
-            if (auction.subTitle != null) {
-                this.subTitle = auction.subTitle
-            }
-            if (auction.minPrice != null) {
-                this.minPrice = auction.minPrice
-            }
-            if (auction.maxPrice != null) {
-                this.maxPrice = auction.maxPrice
-            }
-            if (auction.startTime != null) {
-                this.startTime = auction.startTime
-            }
-            if (auction.endTime != null) {
-                this.endTime = auction.endTime
-            }
-            if (auction.status != null) {
-                this.status = auction.status
-            }
-            if (auction.offerId != null) {
-                this.offerId = auction.offerId
-            }
-            this.updateTime = currentTime()
-            this.updateBy = currentUserId.toString()
+            auction.subTitle?.let { this.subTitle = it }
+            auction.minPrice?.let { this.minPrice = it }
+            auction.maxPrice?.let { this.maxPrice = it }
+            auction.startTime?.let { this.startTime = it }
+            auction.endTime?.let { this.endTime = it }
+            auction.status?.let { this.status = it }
+            auction.offerId?.let { this.offerId = it }
+            this.updateTime = now
+            this.updateBy = operator
         }
         return AuctionVo(auctionRepository.save(auctionPo))
     }
 
     override fun delete(id: Long): Boolean {
+        if (!auctionRepository.existsById(id)) {
+            throw Throwable("拍卖不存在")
+        }
         auctionRepository.deleteById(id)
         return true
     }

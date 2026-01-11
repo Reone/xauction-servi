@@ -7,7 +7,7 @@ import com.reone.xauction.repository.UserRepository
 import com.reone.xauction.service.UserService
 import com.reone.xauction.util.CodeHelper
 import com.reone.xauction.util.currentTime
-import com.reone.xauction.util.currentUserId
+import com.reone.xauction.util.operatorId
 import com.reone.xauction.util.unixTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -42,7 +42,7 @@ class UserServiceImpl : UserService {
         val user = userRepository.findByIdOrNull(userDto.id!!) ?: throw Throwable("用户不存在")
         user.copyNotNull(userDto)
         user.updateTime = currentTime()
-        user.updateBy = currentUserId.toString()
+        user.updateBy = operatorId
         val userPo = userRepository.save(user)
         return UserVo(userPo)
     }
@@ -62,10 +62,11 @@ class UserServiceImpl : UserService {
         if (user.nick.isNullOrEmpty()) {
             user.nick = "匿名用户${unixTime()}"
         }
-        user.createTime = currentTime()
-        user.createBy = currentUserId.toString()
-        user.updateTime = user.createTime
-        user.updateBy = currentUserId.toString()
+        val now = currentTime()
+        user.createTime = now
+        user.createBy = operatorId
+        user.updateTime = now
+        user.updateBy = operatorId
         user = userRepository.save(user)
         return UserVo(user)
     }
@@ -91,5 +92,11 @@ class UserServiceImpl : UserService {
     override fun list(): List<UserVo> {
         val userList = userRepository.findAll()
         return userList.map { UserVo(it) }
+    }
+
+    override fun delete(id: Long): Boolean {
+        val user = userRepository.findByIdOrNull(id) ?: throw Throwable("用户不存在")
+        userRepository.delete(user)
+        return true
     }
 }
